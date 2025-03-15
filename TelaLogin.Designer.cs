@@ -149,6 +149,7 @@
             this.FormaBackground.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.FormaBackground.TabIndex = 10;
             this.FormaBackground.TabStop = false;
+            this.FormaBackground.Click += new System.EventHandler(this.FormaBackground_Click);
             // 
             // Lema
             // 

@@ -72,5 +72,10 @@ namespace PitayaCompany
         {
 
         }
+
+        private void FormaBackground_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
