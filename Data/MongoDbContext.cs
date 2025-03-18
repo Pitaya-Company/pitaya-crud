@@ -1,14 +1,14 @@
 using MongoDB.Driver;
-
 namespace pitaya_crud.Data;
 
 public class MongoDbContext
 {
-    const string connectionUri = "mongodb+srv://pitayacompany:pc0pc1pc2@clusterpitayacompany.b2gw2.mongodb.net/?appName=ClusterPitayaCompany";
+    private readonly string _connectionUri = Environment.GetEnvironmentVariable("PITAYACONNECTIONSTRING") 
+                                             ?? throw new ArgumentNullException("PITAYACONNECTIONSTRING não foi encontrada");
     private readonly IMongoDatabase _database;
     public MongoDbContext()
     {
-        var client = new MongoClient(connectionUri);
+        var client = new MongoClient(_connectionUri);
         _database = client.GetDatabase("PitayaCompanyDb");
     }
 
