@@ -1,10 +1,12 @@
 using MongoDB.Driver;
+using pitaya_crud.Models;
 namespace pitaya_crud.Data;
 
 public class MongoDbContext
 {
-    private readonly string _connectionUri = Environment.GetEnvironmentVariable("PITAYACONNECTIONSTRING") 
+    private readonly string _connectionUri = Environment.GetEnvironmentVariable("PITAYACONNECTIONSTRING")
                                              ?? throw new ArgumentNullException("PITAYACONNECTIONSTRING não foi encontrada");
+
     private readonly IMongoDatabase _database;
     public MongoDbContext()
     {
@@ -14,3 +16,4 @@ public class MongoDbContext
 
     public IMongoCollection<Usuario> Usuarios => _database.GetCollection<Usuario>("usuarios");
 }
+
