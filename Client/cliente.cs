@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace pitaya_crud.Client{
-public class Produto
+public class Cliente
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
