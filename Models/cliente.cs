@@ -1,7 +1,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace pitaya_crud.Client{
+namespace pitaya_crud.Models
+{
 public class Cliente
 {
     [BsonId]
