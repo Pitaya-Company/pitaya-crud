@@ -15,5 +15,6 @@ public class MongoDbContext
     }
 
     public IMongoCollection<Usuario> Usuarios => _database.GetCollection<Usuario>("usuarios");
+    public IMongoCollection<Cliente> Clientes => _database.GetCollection<Cliente>("clientes");
 }
 
