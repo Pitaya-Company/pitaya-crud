@@ -1,4 +1,4 @@
-﻿namespace PitayaCompany
+﻿namespace pitaya_crud.Forms
 {
     partial class TelaLogin
     {

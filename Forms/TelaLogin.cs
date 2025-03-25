@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using pitaya_crud.Forms;
+﻿using pitaya_crud.Forms;
 using pitaya_crud.Services;
 
-namespace PitayaCompany
+namespace pitaya_crud.Forms
 {
     public partial class TelaLogin : Form
     {
@@ -54,10 +45,12 @@ namespace PitayaCompany
 
             if (_authService.Login(email,senha))
             {
-                MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                new TelaListagem().Show();
-                Hide();
+                this.Hide();
+
+                var telaListagem = new TelaListagem();
+                telaListagem.ShowDialog();
+
+                this.Show();
             }
             else
             {

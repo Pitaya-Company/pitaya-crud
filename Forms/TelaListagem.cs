@@ -74,5 +74,24 @@ namespace pitaya_crud.Forms
             AtualizarDataGrid();
         }
 
+        private void CadastrarButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Cadastrar clicado");
+        }
+
+        private void SairButton_Click(object sender, EventArgs e)
+        {
+            var confirmacao = MessageBox.Show(
+                "Sair agora?",
+                "Confirmação",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (confirmacao == DialogResult.Yes)
+            {
+                Close();
+            }
+        }
     }
 }
