@@ -38,7 +38,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.MediumSeaGreen;
+            panel1.BackColor = Color.FromArgb(251, 254, 173);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -78,7 +78,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
+            BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(800, 450);
             Controls.Add(dataGridView1);
             Controls.Add(panel2);
