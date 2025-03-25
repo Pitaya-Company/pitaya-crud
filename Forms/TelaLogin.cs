@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using pitaya_crud.Forms;
 using pitaya_crud.Services;
 
 namespace PitayaCompany
@@ -54,7 +55,9 @@ namespace PitayaCompany
             if (_authService.Login(email,senha))
             {
                 MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Abriremos aqui a tela principal do app
+                
+                new TelaListagem().Show();
+                Hide();
             }
             else
             {

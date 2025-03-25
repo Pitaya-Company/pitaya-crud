@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using pitaya_crud.Data;
@@ -27,10 +28,13 @@ namespace pitaya_crud.Services
         public async Task<List<Cliente>> GetClientesAsync(string? orderBy = null, string? nome = null)
         {
             var query = _clientes.AsQueryable();
+            Debug.WriteLine($"Query inicial: {query.ToString()}");
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
-                query = query.Where(c => c.Nome.Contains(nome));
+                nome = nome.ToLower();
+                query = query.Where(c => c.Nome.ToLower().Contains(nome));
+                Debug.WriteLine($"Filtro de nome ativado com {nome}");
             }
 
             query = orderBy?.ToLower() switch
@@ -42,8 +46,9 @@ namespace pitaya_crud.Services
                 "sexo" => query.OrderBy(c => c.Sexo),
                 _ => query
             };
-
-            return await query.ToListAsync();
+            var clientes = await query.ToListAsync();
+            Debug.WriteLine($"LISTA DE CLIENTES:{clientes.Count} itens carregados");
+            return clientes;
         }
 
 
