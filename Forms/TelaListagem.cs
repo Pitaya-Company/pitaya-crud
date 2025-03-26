@@ -18,120 +18,95 @@ namespace pitaya_crud.Forms
 
         private async void TelaListagem_Load(object? sender, EventArgs e)
         {
+            await AtualizarDataGrid();
+        }
+
+        private async Task AtualizarDataGrid()
+        {
             try
             {
                 _clientes = await _service.GetClientesAsync();
                 if (_clientes == null || _clientes.Count == 0)
                 {
-                    MessageBox.Show("Nenhum cliente foi encontrado");
+                    MessageBox.Show("Nenhum cliente foi encontrado.");
+                    return;
                 }
-                AtualizarDataGrid();
+
+                // Configura a grid para auto-gerar as colunas do objeto Cliente.
+                dataGridView1.DataSource = null;
+                dataGridView1.AutoGenerateColumns = true;
+                dataGridView1.DataSource = _clientes;
+
+                // Define todas as colunas (exceto botões) como ReadOnly.
+                foreach (DataGridViewColumn col in dataGridView1.Columns)
+                {
+                    if (!(col is DataGridViewButtonColumn))
+                        col.ReadOnly = true;
+                }
+
+                // Adiciona as colunas de ação caso não existam.
+                if (!dataGridView1.Columns.Contains("Editar"))
+                {
+                    var colunaEditar = new DataGridViewButtonColumn
+                    {
+                        Name = "Editar",
+                        HeaderText = "Ações",
+                        UseColumnTextForButtonValue = false // Permite alteração dinâmica do texto.
+                    };
+                    dataGridView1.Columns.Add(colunaEditar);
+                }
+
+                if (!dataGridView1.Columns.Contains("Excluir"))
+                {
+                    var colunaExcluir = new DataGridViewButtonColumn
+                    {
+                        Name = "Excluir",
+                        HeaderText = "",
+                        UseColumnTextForButtonValue = false // Permite alteração dinâmica do texto.
+                    };
+                    dataGridView1.Columns.Add(colunaExcluir);
+                }
+
+                // Atualiza o texto padrão dos botões para todas as linhas.
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    row.Cells["Editar"].Value = "Editar";
+                    row.Cells["Excluir"].Value = "Excluir";
+                }
+
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                // Garante que o evento de clique está associado.
+                dataGridView1.CellClick -= DataGridView1_CellClick;
+                dataGridView1.CellClick += DataGridView1_CellClick;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocorreu um erro ao carregar os clientes: {ex.Message}");
-            }
-        }
-
-        public void AtualizarDataGrid()
-        {
-            dataGridView1.DataSource = null;
-            dataGridView1.AutoGenerateColumns = true;
-            dataGridView1.DataSource = _clientes;
-
-            if (dataGridView1.Columns["Editar"] == null)
-            {
-                var colunaEditar = new DataGridViewButtonColumn
-                {
-                    Name = "Editar",
-                    HeaderText = "",
-                    UseColumnTextForButtonValue = false
-                };
-                dataGridView1.Columns.Add(colunaEditar);
-            }
-
-            if (dataGridView1.Columns["Excluir"] == null)
-            {
-                var colunaExcluir = new DataGridViewButtonColumn
-                {
-                    Name = "Excluir",
-                    HeaderText = "",
-                    UseColumnTextForButtonValue = false
-                };
-                dataGridView1.Columns.Add(colunaExcluir);
-            }
-
-            ConfigurarDataGrid();
-            AtualizarBotoesDeAcao();
-
-            dataGridView1.CellClick -= DataGridView1_CellClick;
-            dataGridView1.CellClick += DataGridView1_CellClick;
-        }
-
-        public void ConfigurarDataGrid()
-        {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridView1.BorderStyle = BorderStyle.None;
-
-            foreach (DataGridViewColumn coluna in dataGridView1.Columns)
-            {
-                coluna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-            dataGridView1.Left = (this.ClientSize.Width - dataGridView1.Width) / 2;
-        }
-
-        // Os botões das colunas de ação se transformam ao selecionar Editar
-        private void AtualizarBotoesDeAcao()
-        {
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.Index >= 0)
-                {
-                    if (_backupClientes.ContainsKey(row.Index))
-                    {
-                        row.Cells["Editar"].Value = "OK";
-                        row.Cells["Excluir"].Value = "Cancelar";
-                    }
-                    else
-                    {
-                        row.Cells["Editar"].Value = "Editar";
-                        row.Cells["Excluir"].Value = "Excluir";
-                    }
-                }
+                MessageBox.Show($"Erro ao carregar clientes: {ex.Message}");
             }
         }
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            string colunaClicada = dataGridView1.Columns[e.ColumnIndex].Name;
+            string botaoTexto = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "";
+
+            if (colunaClicada == "Editar")
             {
-                if (dataGridView1.Columns[e.ColumnIndex].Name == "Editar")
-                {
-                    string buttonText = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "Editar";
-
-                    if (buttonText == "Editar")
-                    {
-                        IniciarEdicao(e.RowIndex);
-                    }
-                    else if (buttonText == "OK")
-                    {
-                        ConfirmarEdicao(e.RowIndex);
-                    }
-                }
-                else if (dataGridView1.Columns[e.ColumnIndex].Name == "Excluir")
-                {
-                    string buttonText = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "Excluir";
-
-                    if (buttonText == "Excluir")
-                    {
-                        ExcluirCliente(e.RowIndex);
-                    }
-                    else if (buttonText == "Cancelar")
-                    {
-                        CancelarEdicao(e.RowIndex);
-                    }
-                }
+                if (botaoTexto == "Editar")
+                    IniciarEdicao(e.RowIndex);
+                else if (botaoTexto == "OK")
+                    ConfirmarEdicao(e.RowIndex);
+            }
+            else if (colunaClicada == "Excluir")
+            {
+                if (botaoTexto == "Excluir")
+                    ExcluirCliente(e.RowIndex);
+                else if (botaoTexto == "Cancelar")
+                    CancelarEdicao(e.RowIndex);
             }
         }
 
@@ -150,10 +125,13 @@ namespace pitaya_crud.Forms
                 };
             }
 
-            dataGridView1.Rows[rowIndex].Cells["Nome"].ReadOnly = false;
-            dataGridView1.Rows[rowIndex].Cells["Idade"].ReadOnly = false;
-            dataGridView1.Rows[rowIndex].Cells["Telefone"].ReadOnly = false;
-            dataGridView1.Rows[rowIndex].Cells["Sexo"].ReadOnly = false;
+            foreach (DataGridViewColumn col in dataGridView1.Columns)
+            {
+                if (!(col is DataGridViewButtonColumn))
+                {
+                    dataGridView1.Rows[rowIndex].Cells[col.Index].ReadOnly = false;
+                }
+            }
 
             dataGridView1.Rows[rowIndex].Cells["Editar"].Value = "OK";
             dataGridView1.Rows[rowIndex].Cells["Excluir"].Value = "Cancelar";
@@ -174,7 +152,7 @@ namespace pitaya_crud.Forms
                 await _service.UpdateClienteAsync(clienteEditado);
                 MessageBox.Show("Cliente atualizado com sucesso!");
                 _backupClientes.Remove(rowIndex);
-                AtualizarBotoesDeAcao();
+                await AtualizarDataGrid();
             }
             catch (Exception ex)
             {
@@ -186,12 +164,40 @@ namespace pitaya_crud.Forms
         {
             if (_backupClientes.ContainsKey(rowIndex))
             {
-                _clientes![rowIndex] = _backupClientes[rowIndex];
+                Cliente clienteBackup = _backupClientes[rowIndex];
+                _clientes![rowIndex] = new Cliente
+                {
+                    Id = clienteBackup.Id,
+                    Nome = clienteBackup.Nome,
+                    Idade = clienteBackup.Idade,
+                    Telefone = clienteBackup.Telefone,
+                    Fumante = clienteBackup.Fumante,
+                    Sexo = clienteBackup.Sexo
+                };
+
                 _backupClientes.Remove(rowIndex);
+
+                dataGridView1.Rows[rowIndex].Cells["Nome"].Value = clienteBackup.Nome;
+                dataGridView1.Rows[rowIndex].Cells["Idade"].Value = clienteBackup.Idade;
+                dataGridView1.Rows[rowIndex].Cells["Telefone"].Value = clienteBackup.Telefone;
+                dataGridView1.Rows[rowIndex].Cells["Fumante"].Value = clienteBackup.Fumante;
+                dataGridView1.Rows[rowIndex].Cells["Sexo"].Value = clienteBackup.Sexo;
             }
 
-            AtualizarDataGrid();
+            dataGridView1.Rows[rowIndex].Cells["Editar"].Value = "Editar";
+            dataGridView1.Rows[rowIndex].Cells["Excluir"].Value = "Excluir";
+
+            foreach (DataGridViewColumn col in dataGridView1.Columns)
+            {
+                if (!(col is DataGridViewButtonColumn))
+                {
+                    dataGridView1.Rows[rowIndex].Cells[col.Index].ReadOnly = true;
+                }
+            }
+
+            dataGridView1.Refresh();
         }
+
 
         private async void ExcluirCliente(int rowIndex)
         {
@@ -208,7 +214,7 @@ namespace pitaya_crud.Forms
                 {
                     await _service.DeleteClienteAsync(_clientes![rowIndex].Id!);
                     _clientes.RemoveAt(rowIndex);
-                    AtualizarDataGrid();
+                    await AtualizarDataGrid();
                     MessageBox.Show("Cliente excluído com sucesso!");
                 }
                 catch (Exception ex)
@@ -220,29 +226,59 @@ namespace pitaya_crud.Forms
 
         private async void CaixaDePesquisa_TextChanged(object sender, EventArgs e)
         {
-            caixaDePesquisa.PlaceholderText = "Pesquise aqui...";
             _clientes = await _service.GetClientesAsync(null, caixaDePesquisa.Text);
-            AtualizarDataGrid();
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = _clientes;
+            RestaurarBotoes();
         }
 
-        private void CadastrarButton_Click(object sender, EventArgs e)
+        // Método auxiliar para restaurar os botões na pesquisa
+        private void RestaurarBotoes()
         {
-            MessageBox.Show("Cadastrar clicado");
+            if (!dataGridView1.Columns.Contains("Editar"))
+            {
+                var colunaEditar = new DataGridViewButtonColumn
+                {
+                    Name = "Editar",
+                    HeaderText = "Ações",
+                    UseColumnTextForButtonValue = false
+                };
+                dataGridView1.Columns.Add(colunaEditar);
+            }
+
+            if (!dataGridView1.Columns.Contains("Excluir"))
+            {
+                var colunaExcluir = new DataGridViewButtonColumn
+                {
+                    Name = "Excluir",
+                    HeaderText = "",
+                    UseColumnTextForButtonValue = false
+                };
+                dataGridView1.Columns.Add(colunaExcluir);
+            }
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                row.Cells["Editar"].Value = "Editar";
+                row.Cells["Excluir"].Value = "Excluir";
+            }
         }
 
+
+        // Métodos vazios para botões
         private void SairButton_Click(object sender, EventArgs e)
         {
-            var confirmacao = MessageBox.Show(
-                "Sair agora?",
+            var confirmacao = MessageBox.Show("Tem certeza que deseja sair?",
                 "Confirmação",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+                MessageBoxIcon.Question);
 
             if (confirmacao == DialogResult.Yes)
             {
                 Close();
             }
         }
+
+        private void CadastrarButton_Click(object sender, EventArgs e) { }
     }
 }

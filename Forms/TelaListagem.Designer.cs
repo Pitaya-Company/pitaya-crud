@@ -100,11 +100,12 @@ namespace pitaya_crud.Forms
             // 
             dataGridView1.BackgroundColor = SystemColors.ControlLightLight;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(58, 86);
+            dataGridView1.Location = new Point(8, 86);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(689, 356);
+            dataGridView1.Size = new Size(787, 356);
             dataGridView1.TabIndex = 3;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.BorderStyle = BorderStyle.None;
             // 
             // TelaListagem
             // 
