@@ -279,6 +279,11 @@ namespace pitaya_crud.Forms
             }
         }
 
-        private void CadastrarButton_Click(object sender, EventArgs e) { }
+        private async void CadastrarButton_Click(object sender, EventArgs e)
+        {
+            var telaCadastro = new TelaCadastro();
+            telaCadastro.ShowDialog();
+            await AtualizarDataGrid();
+        }
     }
 }
