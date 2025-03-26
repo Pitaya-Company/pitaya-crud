@@ -1,4 +1,5 @@
-﻿namespace pitaya_crud.Forms
+﻿
+namespace pitaya_crud.Forms
 {
     partial class TelaListagem
     {
@@ -99,11 +100,11 @@
             // 
             dataGridView1.BackgroundColor = SystemColors.ControlLightLight;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(98, 82);
+            dataGridView1.Location = new Point(58, 86);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(602, 356);
+            dataGridView1.Size = new Size(689, 356);
             dataGridView1.TabIndex = 3;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick_1;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // TelaListagem
             // 
@@ -122,6 +123,18 @@
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
         }
 
         #endregion
