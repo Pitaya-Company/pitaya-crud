@@ -121,6 +121,7 @@ namespace pitaya_crud.Forms
             MaximizeBox = false;
             Name = "TelaListagem";
             Padding = new Padding(5);
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Listagem de Usuários";
             Load += TelaListagem_Load;
             panel2.ResumeLayout(false);

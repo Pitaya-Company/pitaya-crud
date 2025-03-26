@@ -217,6 +217,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "TelaLogin";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = " Pitaya Client";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)PersonagemPitaya).EndInit();
