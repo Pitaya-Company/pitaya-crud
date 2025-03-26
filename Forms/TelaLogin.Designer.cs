@@ -200,7 +200,7 @@
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ButtonHighlight;
+            BackColor = Color.White;
             ClientSize = new Size(800, 450);
             Controls.Add(BotaoLimpar);
             Controls.Add(LabelLogin);
@@ -215,6 +215,7 @@
             Controls.Add(FormaBackground);
             Font = new Font("SF Pro Display", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "TelaLogin";
             Text = " Pitaya Client";
             Load += Form1_Load;

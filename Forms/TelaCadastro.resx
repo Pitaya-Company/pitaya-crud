@@ -123,7 +123,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="checkBoxFumante.Font" type="System.Drawing.Font, System.Drawing">
-    <value>SF Pro Display, 11.25pt</value>
+    <value>SF Pro Display, 12pt</value>
   </data>
   <data name="checkBoxFumante.Location" type="System.Drawing.Point, System.Drawing">
     <value>513, 223</value>
@@ -147,13 +147,13 @@
     <value>12</value>
   </data>
   <data name="textBoxName.Font" type="System.Drawing.Font, System.Drawing">
-    <value>SF Pro Display, 11.25pt</value>
+    <value>SF Pro Display, 12pt</value>
   </data>
   <data name="textBoxName.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 147</value>
   </data>
   <data name="textBoxName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>486, 25</value>
+    <value>486, 27</value>
   </data>
   <data name="textBoxName.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -204,7 +204,7 @@
     <value>SF Pro Display, 20.25pt, style=Bold</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>275, 9</value>
+    <value>297, 10</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>257, 32</value>
@@ -260,11 +260,18 @@
   <data name="textBoxIdade.Location" type="System.Drawing.Point, System.Drawing">
     <value>698, 147</value>
   </data>
+  <data name="textBoxIdade.MaxLength" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
   <data name="textBoxIdade.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 27</value>
   </data>
   <data name="textBoxIdade.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="textBoxIdade.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
   </data>
   <data name="&gt;&gt;textBoxIdade.Name" xml:space="preserve">
     <value>textBoxIdade</value>
@@ -278,6 +285,9 @@
   <data name="&gt;&gt;textBoxIdade.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="comboBoxSexo.Font" type="System.Drawing.Font, System.Drawing">
+    <value>SF Pro Display, 12pt</value>
+  </data>
   <data name="comboBoxSexo.Items" xml:space="preserve">
     <value>Masculino</value>
   </data>
@@ -288,7 +298,7 @@
     <value>624, 218</value>
   </data>
   <data name="comboBoxSexo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 24</value>
+    <value>121, 27</value>
   </data>
   <data name="comboBoxSexo.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -334,7 +344,7 @@
     <value>6</value>
   </data>
   <data name="textBoxTelefone.Font" type="System.Drawing.Font, System.Drawing">
-    <value>SF Pro Display, 11.25pt</value>
+    <value>SF Pro Display, 12pt</value>
   </data>
   <data name="textBoxTelefone.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 218</value>
@@ -343,7 +353,7 @@
     <value>13</value>
   </data>
   <data name="textBoxTelefone.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 25</value>
+    <value>233, 27</value>
   </data>
   <data name="textBoxTelefone.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -414,7 +424,6 @@
   <data name="&gt;&gt;labelSexo.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Cadastro.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>

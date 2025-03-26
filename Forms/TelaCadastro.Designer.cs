@@ -62,7 +62,7 @@
             // labelNome
             // 
             resources.ApplyResources(labelNome, "labelNome");
-            labelNome.ForeColor = Color.Blue;
+            labelNome.ForeColor = SystemColors.ControlText;
             labelNome.Name = "labelNome";
             // 
             // label2
@@ -85,9 +85,9 @@
             // 
             // comboBoxSexo
             // 
+            resources.ApplyResources(comboBoxSexo, "comboBoxSexo");
             comboBoxSexo.FormattingEnabled = true;
             comboBoxSexo.Items.AddRange(new object[] { resources.GetString("comboBoxSexo.Items"), resources.GetString("comboBoxSexo.Items1") });
-            resources.ApplyResources(comboBoxSexo, "comboBoxSexo");
             comboBoxSexo.Name = "comboBoxSexo";
             comboBoxSexo.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -146,7 +146,7 @@
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ButtonHighlight;
+            BackColor = Color.WhiteSmoke;
             Controls.Add(botaoFechar);
             Controls.Add(botaoSalvar);
             Controls.Add(Cadastro);
@@ -161,6 +161,7 @@
             Controls.Add(textBoxName);
             Controls.Add(checkBoxFumante);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
             Name = "TelaCadastro";
             Load += TelaCadastro_Load;
             Cadastro.ResumeLayout(false);

@@ -29,6 +29,7 @@ namespace pitaya_crud.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TelaListagem));
             panel1 = new Panel();
             panel2 = new Panel();
             SairButton = new Button();
@@ -99,23 +100,25 @@ namespace pitaya_crud.Forms
             // dataGridView1
             // 
             dataGridView1.BackgroundColor = SystemColors.ControlLightLight;
+            dataGridView1.BorderStyle = BorderStyle.None;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(8, 86);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(787, 356);
             dataGridView1.TabIndex = 3;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
-            dataGridView1.BorderStyle = BorderStyle.None;
             // 
             // TelaListagem
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ButtonHighlight;
+            BackColor = Color.WhiteSmoke;
             ClientSize = new Size(800, 450);
             Controls.Add(dataGridView1);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "TelaListagem";
             Padding = new Padding(5);
             Text = "Listagem de Usuários";
