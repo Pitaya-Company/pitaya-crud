@@ -22,16 +22,14 @@ namespace pitaya_crud.Models
         public required bool Fumante { get; set; }
 
         [BsonElement("sexo")]
-        public required  string Sexo { get; set; }
+        public required string Sexo { get; set; }
 
         public bool IsValid()
         {
-            if (string.IsNullOrWhiteSpace(this.Nome)) return false;
-            if(this.Idade <= 0) return false;
-            if (string.IsNullOrWhiteSpace(this.Telefone)) return false;
-            if (string.IsNullOrWhiteSpace(this.Sexo)) return false;
-
-            return true;
+            if (string.IsNullOrWhiteSpace(Nome)) return false;
+            if(Idade <= 0) return false;
+            if (string.IsNullOrWhiteSpace(Telefone)) return false;
+            return (!string.IsNullOrWhiteSpace(Sexo) || Sexo == "Masculino") && Sexo == "Feminino";
         }
     }
 

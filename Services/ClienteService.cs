@@ -28,7 +28,7 @@ namespace pitaya_crud.Services
         public async Task<List<Cliente>> GetClientesAsync(string? orderBy = null, string? nome = null)
         {
             var query = _clientes.AsQueryable();
-            Debug.WriteLine($"Query inicial: {query.ToString()}");
+            Debug.WriteLine($"Query inicial: {query}");
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
