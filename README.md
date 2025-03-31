@@ -34,6 +34,8 @@ Execute<br>
 
 ## 📄 Projeto Acadêmico
 
+[Documentação detalhada](https://github.com/Pitaya-Company/pitaya-crud/blob/main/Docs/PitayaCompanyDoc.docx)<br>
+
 Este projeto foi requerido como A1 (Atividade 1) da faculdade FATEC Dom Evaristo Arns<br>
 Módulo BANCO DE DADOS NÃO RELACIONAL<br>
 Professor - Gilberto de Oliveira Antônio
