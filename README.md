@@ -14,7 +14,7 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 ### 🔧 Instalação
 
 Crie uma variável de ambiente com uma connection string válida para um cluster mongodb/instância local, a variável deve ter como nome <b>PITAYACONNECTIONSTRING</b> <br>
-Baixe o executável<br>
+Baixe o **[executável](https://github.com/Pitaya-Company/pitaya-crud/releases/download/pitaya/pitaya-crud.exe)**<br>
 Execute<br>
 
 ## 🛠️ Construído com
