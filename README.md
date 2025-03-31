@@ -25,12 +25,12 @@ Execute<br>
 
 ## ✒️ Autores
 
-* **Caio Matheus** - [fulanodetal](https://github.com/linkParaPerfil)
-* **João Carlos** - [fulanodetal](https://github.com/linkParaPerfil)
-* **João Vitor** - [fulanodetal](https://github.com/linkParaPerfil)
-* **Vinicius** - [fulanodetal](https://github.com/linkParaPerfil)
-* **Fabio Ariga** - [fulanodetal](https://github.com/linkParaPerfil)
-* **Hudson Henrique** - [fulanodetal](https://github.com/linkParaPerfil)
+* **[Caio](https://github.com/CaioMtho)**
+* **[João Carlos](https://github.com/JoCa-SP)**
+* **[João Vitor](https://github.com/MoraiisDev)**
+* **Vinicius**
+* **[Fabio](https://github.com/FabioAriga)**
+* **[Hudson](https://github.com/HudsonDomin)**
 
 ## 📄 Projeto Acadêmico
 
