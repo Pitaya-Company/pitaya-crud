@@ -9,11 +9,18 @@ namespace pitaya_crud.Forms
         private readonly ClienteService _service;
         private readonly Dictionary<int, Cliente> _backupClientes = new();
 
+        // Campos para controle de ordenação e filtro
+        private string _ordenadoPor = "";
+        private bool _crescente = true;
+        private string _pesquisaAtual = "";
+
         public TelaListagem()
         {
             InitializeComponent();
             _service = new ClienteService();
             this.Load += TelaListagem_Load;
+            dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
+            caixaDePesquisa.TextChanged += CaixaDePesquisa_TextChanged;
         }
 
         private async void TelaListagem_Load(object? sender, EventArgs e)
@@ -23,7 +30,13 @@ namespace pitaya_crud.Forms
 
         private async Task AtualizarDataGrid()
         {
-            _clientes = await _service.GetClientesAsync() ?? new List<Cliente>();
+            _clientes = await _service.GetClientesAsync(
+                orderBy: string.IsNullOrWhiteSpace(_ordenadoPor) ? null : _ordenadoPor,
+                nome: _pesquisaAtual
+            );
+
+            if (!_crescente)
+                _clientes.Reverse();
 
             if (_clientes.Count == 0)
             {
@@ -167,7 +180,6 @@ namespace pitaya_crud.Forms
 
                 _backupClientes.Remove(rowIndex);
 
-                // Restaura os valores nas células de exibição.
                 dataGridView1.Rows[rowIndex].Cells["Nome"].Value = clienteBackup.Nome;
                 dataGridView1.Rows[rowIndex].Cells["Idade"].Value = clienteBackup.Idade;
                 dataGridView1.Rows[rowIndex].Cells["Telefone"].Value = clienteBackup.Telefone;
@@ -178,7 +190,6 @@ namespace pitaya_crud.Forms
             dataGridView1.Rows[rowIndex].Cells["Editar"].Value = "Editar";
             dataGridView1.Rows[rowIndex].Cells["Excluir"].Value = "Excluir";
 
-            // Bloqueia novamente todas as células (exceto botões).
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (!(col is DataGridViewButtonColumn))
@@ -208,11 +219,8 @@ namespace pitaya_crud.Forms
 
         private async void CaixaDePesquisa_TextChanged(object sender, EventArgs e)
         {
-            _clientes = await _service.GetClientesAsync(null, caixaDePesquisa.Text);
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _clientes;
-            DefinirColunasAcao();
-            AtualizarBotoesAcao();
+            _pesquisaAtual = caixaDePesquisa.Text;
+            await AtualizarDataGrid();
         }
 
         private void SairButton_Click(object sender, EventArgs e)
@@ -230,6 +238,28 @@ namespace pitaya_crud.Forms
         {
             var telaCadastro = new TelaCadastro();
             telaCadastro.ShowDialog();
+            await AtualizarDataGrid();
+        }
+
+        private async void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var clickedColumn = dataGridView1.Columns[e.ColumnIndex];
+
+            if (clickedColumn is DataGridViewButtonColumn)
+                return;
+
+            string orderBy = clickedColumn.Name.ToLower();
+
+            if (_ordenadoPor == orderBy)
+            {
+                _crescente = !_crescente;
+            }
+            else
+            {
+                _ordenadoPor = orderBy;
+                _crescente = true;
+            }
+
             await AtualizarDataGrid();
         }
     }
