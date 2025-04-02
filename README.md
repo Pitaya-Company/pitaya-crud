@@ -17,6 +17,8 @@ Crie uma variável de ambiente com uma connection string válida para um cluster
 Baixe o **[executável](https://github.com/Pitaya-Company/pitaya-crud/releases/download/pitaya/pitaya-crud.exe)**<br>
 Execute<br>
 
+obs: o login padrão é "admin" e a senha é "admin"
+
 ## 🛠️ Construído com
 
 * .NET C# - Linguagem de programação
