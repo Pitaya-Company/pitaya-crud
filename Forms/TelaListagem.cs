@@ -9,7 +9,6 @@ namespace pitaya_crud.Forms
         private readonly ClienteService _service;
         private readonly Dictionary<int, Cliente> _backupClientes = new();
 
-        // Campos para controle de ordenação e filtro
         private string _ordenadoPor = "";
         private bool _crescente = true;
         private string _pesquisaAtual = "";
@@ -123,34 +122,34 @@ namespace pitaya_crud.Forms
             }
         }
 
-        private void IniciarEdicao(int rowIndex)
+        private void IniciarEdicao(int index)
         {
-            if (!_backupClientes.ContainsKey(rowIndex))
+            if (!_backupClientes.ContainsKey(index))
             {
-                _backupClientes[rowIndex] = new Cliente
+                _backupClientes[index] = new Cliente
                 {
-                    Id = _clientes[rowIndex].Id,
-                    Nome = _clientes[rowIndex].Nome,
-                    Idade = _clientes[rowIndex].Idade,
-                    Telefone = _clientes[rowIndex].Telefone,
-                    Fumante = _clientes[rowIndex].Fumante,
-                    Sexo = _clientes[rowIndex].Sexo
+                    Id = _clientes[index].Id,
+                    Nome = _clientes[index].Nome,
+                    Idade = _clientes[index].Idade,
+                    Telefone = _clientes[index].Telefone,
+                    Fumante = _clientes[index].Fumante,
+                    Sexo = _clientes[index].Sexo
                 };
             }
 
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (!(col is DataGridViewButtonColumn))
-                    dataGridView1.Rows[rowIndex].Cells[col.Index].ReadOnly = false;
+                    dataGridView1.Rows[index].Cells[col.Index].ReadOnly = false;
             }
 
-            dataGridView1.Rows[rowIndex].Cells["Editar"].Value = "OK";
-            dataGridView1.Rows[rowIndex].Cells["Excluir"].Value = "Cancelar";
+            dataGridView1.Rows[index].Cells["Editar"].Value = "OK";
+            dataGridView1.Rows[index].Cells["Excluir"].Value = "Cancelar";
         }
 
-        private async void ConfirmarEdicao(int rowIndex)
+        private async void ConfirmarEdicao(int index)
         {
-            Cliente clienteEditado = _clientes[rowIndex];
+            Cliente clienteEditado = _clientes[index];
 
             if (!clienteEditado.IsValid())
             {
@@ -160,15 +159,15 @@ namespace pitaya_crud.Forms
 
             await _service.UpdateClienteAsync(clienteEditado);
             MessageBox.Show("Cliente atualizado com sucesso!");
-            _backupClientes.Remove(rowIndex);
+            _backupClientes.Remove(index);
             await AtualizarDataGrid();
         }
 
-        private void CancelarEdicao(int rowIndex)
+        private void CancelarEdicao(int index)
         {
-            if (_backupClientes.TryGetValue(rowIndex, out Cliente clienteBackup))
+            if (_backupClientes.TryGetValue(index, out Cliente clienteBackup))
             {
-                _clientes[rowIndex] = new Cliente
+                _clientes[index] = new Cliente
                 {
                     Id = clienteBackup.Id,
                     Nome = clienteBackup.Nome,
@@ -178,22 +177,22 @@ namespace pitaya_crud.Forms
                     Sexo = clienteBackup.Sexo
                 };
 
-                _backupClientes.Remove(rowIndex);
+                _backupClientes.Remove(index);
 
-                dataGridView1.Rows[rowIndex].Cells["Nome"].Value = clienteBackup.Nome;
-                dataGridView1.Rows[rowIndex].Cells["Idade"].Value = clienteBackup.Idade;
-                dataGridView1.Rows[rowIndex].Cells["Telefone"].Value = clienteBackup.Telefone;
-                dataGridView1.Rows[rowIndex].Cells["Fumante"].Value = clienteBackup.Fumante;
-                dataGridView1.Rows[rowIndex].Cells["Sexo"].Value = clienteBackup.Sexo;
+                dataGridView1.Rows[index].Cells["Nome"].Value = clienteBackup.Nome;
+                dataGridView1.Rows[index].Cells["Idade"].Value = clienteBackup.Idade;
+                dataGridView1.Rows[index].Cells["Telefone"].Value = clienteBackup.Telefone;
+                dataGridView1.Rows[index].Cells["Fumante"].Value = clienteBackup.Fumante;
+                dataGridView1.Rows[index].Cells["Sexo"].Value = clienteBackup.Sexo;
             }
 
-            dataGridView1.Rows[rowIndex].Cells["Editar"].Value = "Editar";
-            dataGridView1.Rows[rowIndex].Cells["Excluir"].Value = "Excluir";
+            dataGridView1.Rows[index].Cells["Editar"].Value = "Editar";
+            dataGridView1.Rows[index].Cells["Excluir"].Value = "Excluir";
 
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (!(col is DataGridViewButtonColumn))
-                    dataGridView1.Rows[rowIndex].Cells[col.Index].ReadOnly = true;
+                    dataGridView1.Rows[index].Cells[col.Index].ReadOnly = true;
             }
 
             dataGridView1.Refresh();
@@ -243,12 +242,12 @@ namespace pitaya_crud.Forms
 
         private async void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            var clickedColumn = dataGridView1.Columns[e.ColumnIndex];
+            var coluna = dataGridView1.Columns[e.ColumnIndex];
 
-            if (clickedColumn is DataGridViewButtonColumn)
+            if (coluna is DataGridViewButtonColumn)
                 return;
 
-            string orderBy = clickedColumn.Name.ToLower();
+            string orderBy = coluna.Name.ToLower();
 
             if (_ordenadoPor == orderBy)
             {

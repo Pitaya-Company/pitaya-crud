@@ -71,20 +71,6 @@ namespace pitaya_crud.Services
             return cliente;
         }
 
-        public async Task<Cliente> UpdateClienteAsync(string id, string field, object value)
-        {
-            var update = Builders<Cliente>.Update.Set(field, value);
-            var result = await _clientes.FindOneAndUpdateAsync(
-                c => c.Id == id,
-                update,
-                new FindOneAndUpdateOptions<Cliente> { ReturnDocument = ReturnDocument.After }
-            );
-
-            if (result == null)
-                throw new KeyNotFoundException($"Cliente com ID {id} não encontrado ou não atualizado.");
-
-            return result;
-        }
 
         public async Task<Cliente> UpdateClienteAsync(Cliente cliente)
         {
