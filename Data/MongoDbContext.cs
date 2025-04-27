@@ -5,7 +5,7 @@ namespace pitaya_crud.Data;
 public class MongoDbContext
 {
     private readonly string _connectionUri = Environment.GetEnvironmentVariable("PITAYACONNECTIONSTRING")
-                                             ?? throw new ArgumentNullException("PITAYACONNECTIONSTRING não foi encontrada");
+                                             ?? throw new ArgumentNullException("PITAYACONNECTIONSTRING nï¿½o foi encontrada");
 
     private readonly IMongoDatabase _database;
     public MongoDbContext()
@@ -16,5 +16,6 @@ public class MongoDbContext
 
     public IMongoCollection<Usuario> Usuarios => _database.GetCollection<Usuario>("usuarios");
     public IMongoCollection<Cliente> Clientes => _database.GetCollection<Cliente>("clientes");
+    public IMongoCollection<Compra> Compras => _database.GetCollection<Compra>("compras");
 }
 

@@ -81,11 +81,7 @@ namespace pitaya_crud.Services
                 c => c.Id == cliente.Id,
                 cliente,
                 new FindOneAndReplaceOptions<Cliente> { ReturnDocument = ReturnDocument.After }
-            );
-
-            if (result == null)
-                throw new KeyNotFoundException($"Cliente com ID {cliente.Id} não foi atualizado.");
-
+            ) ?? throw new KeyNotFoundException($"Cliente com ID {cliente.Id} não foi atualizado.");
             return result;
         }
 
