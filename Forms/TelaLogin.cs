@@ -5,12 +5,12 @@ namespace pitaya_crud.Forms
 {
     public partial class TelaLogin : Form
     {
-        private readonly AuthService _authService;
+        private readonly UsuarioService _usuarioService;
 
         public TelaLogin()
         {
             InitializeComponent();
-            _authService = new AuthService();
+            _usuarioService = new UsuarioService();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -43,7 +43,7 @@ namespace pitaya_crud.Forms
             string email = TextBoxLogin.Text.Trim();
             string senha = TextBoxSenha.Text.Trim();
 
-            if (_authService.Login(email,senha))
+            if (_usuarioService.Login(email,senha))
             {
                 this.Hide();
 

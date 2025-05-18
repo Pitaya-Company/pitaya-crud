@@ -14,5 +14,12 @@ namespace pitaya_crud.Models
 
         [BsonElement("senha")]
         public required string Senha { get; set; }
+
+        public bool IsValid()
+        {
+            if (string.IsNullOrWhiteSpace(Email)) return false;
+            if (string.IsNullOrWhiteSpace(Senha)) return false;
+            return true;
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace pitaya_crud.Models
         public required string ClienteId { get; set; }
 
         [BsonElement("produtos")] 
-        public List<Produto> Produtos { get; set; } = [];
+        public List<ProdutoCompra> Produtos { get; set; } = [];
 
         [BsonElement("data")]
         public DateTime Data { get; set; } = DateTime.UtcNow;
