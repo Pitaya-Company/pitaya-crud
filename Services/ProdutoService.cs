@@ -51,10 +51,9 @@ namespace pitaya_crud.Services
 
         public async Task<Produto> CreateProdutoAsync(Produto produto)
         {
-            if (string.IsNullOrWhiteSpace(produto.CodigoProduto) ||
-                string.IsNullOrWhiteSpace(produto.NomeProduto))
+            if (string.IsNullOrWhiteSpace(produto.NomeProduto))
             {
-                throw new ValidationException("Produto inválido: código e nome são obrigatórios.");
+                throw new ValidationException("Produto inválido: nome é obrigatório.");
             }
 
             await _produtos.InsertOneAsync(produto);

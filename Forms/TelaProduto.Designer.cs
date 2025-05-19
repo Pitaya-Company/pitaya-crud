@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             panel2 = new Panel();
+            txtNomeBusca = new TextBox();
             BuscarButton = new Button();
             SairButton = new Button();
             NovoProdutoButton = new Button();
-            caixaPesquisa = new TextBox();
             panel1 = new Panel();
             label2 = new Label();
             dataGridView1 = new DataGridView();
@@ -43,15 +43,22 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(txtNomeBusca);
             panel2.Controls.Add(BuscarButton);
             panel2.Controls.Add(SairButton);
             panel2.Controls.Add(NovoProdutoButton);
-            panel2.Controls.Add(caixaPesquisa);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 42);
             panel2.Name = "panel2";
             panel2.Size = new Size(800, 44);
             panel2.TabIndex = 6;
+            // 
+            // txtNomeBusca
+            // 
+            txtNomeBusca.Location = new Point(84, 10);
+            txtNomeBusca.Name = "txtNomeBusca";
+            txtNomeBusca.Size = new Size(511, 23);
+            txtNomeBusca.TabIndex = 9;
             // 
             // BuscarButton
             // 
@@ -73,7 +80,7 @@
             SairButton.Padding = new Padding(1);
             SairButton.Size = new Size(75, 25);
             SairButton.TabIndex = 4;
-            SairButton.Text = "Sair";
+            SairButton.Text = "Voltar";
             SairButton.UseVisualStyleBackColor = false;
             SairButton.Click += SairButton_Click;
             // 
@@ -90,13 +97,6 @@
             NovoProdutoButton.Text = "Novo Produto";
             NovoProdutoButton.UseVisualStyleBackColor = false;
             NovoProdutoButton.Click += NovoProdutoButton_Click;
-            // 
-            // caixaPesquisa
-            // 
-            caixaPesquisa.Location = new Point(83, 11);
-            caixaPesquisa.Name = "caixaPesquisa";
-            caixaPesquisa.Size = new Size(512, 23);
-            caixaPesquisa.TabIndex = 2;
             // 
             // panel1
             // 
@@ -131,7 +131,6 @@
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(796, 298);
             dataGridView1.TabIndex = 4;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // TelaProduto
             // 
@@ -157,9 +156,9 @@
         private Button BuscarButton;
         private Button SairButton;
         private Button NovoProdutoButton;
-        private TextBox caixaPesquisa;
         private Panel panel1;
         private DataGridView dataGridView1;
         private Label label2;
+        private TextBox txtNomeBusca;
     }
 }

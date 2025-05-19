@@ -1,17 +1,19 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace pitaya_crud.Models
 {
     public class Produto
     {
-        [BsonElement("codigo_produto")]
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string CodigoProduto 
         { 
             get; set; 
         }
 
         [BsonElement("nome_produto")]
-        public string NomeProduto 
+        public required string NomeProduto 
         { 
             get; set; 
         }
