@@ -52,40 +52,44 @@ namespace pitaya_crud.Forms
                 );
                 _compra = new List<Compra> { compra };
             }
-            else if (!string.IsNullOrWhiteSpace(_idcliente) && !string.IsNullOrWhiteSpace(_idcompra))
+            else if (string.IsNullOrWhiteSpace(_idcliente) && string.IsNullOrWhiteSpace(_idcompra))
             {
                 _compra = await _service.GetComprasAsync(
                     orderBy: string.IsNullOrWhiteSpace(_ordenadoPor) ? null : _ordenadoPor,
-                    clienteId: null
+                    clienteId: _idcliente
                 );
             }
-
             if (!_crescente)
                 _compra.Reverse();
-
             if (_compra.Count == 0)
             {
                 MessageBox.Show("Nenhuma compra encontrada.");
                 return;
             }
-
             dataGridView1.SuspendLayout();
             dataGridView1.DataSource = null;
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = _compra;
+            if (dataGridView1.Columns.Contains("Produtos"))
+            {
+                dataGridView1.Columns.Remove("Produtos");
+            }
+            if (!dataGridView1.Columns.Contains("Produtos"))
+            {
+                var colunaProdutos = new DataGridViewTextBoxColumn();
+                colunaProdutos.Name = "Produtos";
+                colunaProdutos.HeaderText = "Produtos";
+                dataGridView1.Columns.Add(colunaProdutos);
+            }
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dataGridView1.AutoResizeRows();
-
+            DefinirColunasAcao();
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (!(col is DataGridViewButtonColumn))
                     col.ReadOnly = true;
             }
-
-            DefinirColunasAcao();
-
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
             dataGridView1.CellClick -= DataGridView1_CellClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
             dataGridView1.ResumeLayout();
@@ -97,7 +101,7 @@ namespace pitaya_crud.Forms
                 var compra = dataGridView1.Rows[e.RowIndex].DataBoundItem as Compra;
                 if (compra != null && compra.Produtos != null)
                 {
-                    string textoFormatado = string.Join("\n", compra.Produtos.Select(p => $"{p.NomeProduto} - {p.Quantidade}"));
+                    string textoFormatado = string.Join("\n", compra.Produtos.Select(p => $"{p.NomeProduto} - {p.QuantidadeP}"));
                     e.Value = textoFormatado;
                     e.FormattingApplied = true;
                 }
@@ -106,26 +110,35 @@ namespace pitaya_crud.Forms
 
         private void DefinirColunasAcao()
         {
+            if (dataGridView1.Columns.Contains("Editar"))
+            {
+                dataGridView1.Columns.Remove("Editar");
+            }
+            if (dataGridView1.Columns.Contains("Excluir"))
+            {
+                dataGridView1.Columns.Remove("Excluir");
+            }
             if (!dataGridView1.Columns.Contains("Editar"))
             {
                 var colunaEditar = new DataGridViewButtonColumn
                 {
                     Name = "Editar",
                     HeaderText = "Ações",
-                    UseColumnTextForButtonValue = false
+                    UseColumnTextForButtonValue = true,
+                    Text = "Editar"
                 };
-                dataGridView1.Columns.Add(colunaEditar);
+                dataGridView1.Columns.Insert(0, colunaEditar);
             }
-
             if (!dataGridView1.Columns.Contains("Excluir"))
             {
                 var colunaExcluir = new DataGridViewButtonColumn
                 {
                     Name = "Excluir",
                     HeaderText = "",
-                    UseColumnTextForButtonValue = false
+                    UseColumnTextForButtonValue = true,
+                    Text = "Excluir"
                 };
-                dataGridView1.Columns.Add(colunaExcluir);
+                dataGridView1.Columns.Insert(1, colunaExcluir);
             }
         }
 
@@ -133,10 +146,8 @@ namespace pitaya_crud.Forms
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return;
-
             string colunaClicada = dataGridView1.Columns[e.ColumnIndex].Name;
             string botaoTexto = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "";
-
             if (colunaClicada == "Editar")
             {
                 var compraSelecionada = _compra[e.RowIndex];
@@ -153,7 +164,7 @@ namespace pitaya_crud.Forms
         private async void ExcluirCompra(int rowIndex)
         {
             var confirmacao = MessageBox.Show(
-                "Deseja realmente excluir este cliente?",
+                "Deseja realmente excluir esta compra?",
                 "Confirmação",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning

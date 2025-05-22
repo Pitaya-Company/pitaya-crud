@@ -106,6 +106,7 @@
             BuscarButton.TabIndex = 8;
             BuscarButton.Text = "Buscar";
             BuscarButton.UseVisualStyleBackColor = true;
+            BuscarButton.Click += BuscarButton_Click;
             // 
             // SairButton
             // 
@@ -119,6 +120,7 @@
             SairButton.TabIndex = 4;
             SairButton.Text = "Sair";
             SairButton.UseVisualStyleBackColor = false;
+            SairButton.Click += SairButton_Click;
             // 
             // NovaCompraButton
             // 
@@ -132,6 +134,7 @@
             NovaCompraButton.TabIndex = 3;
             NovaCompraButton.Text = "Nova compra";
             NovaCompraButton.UseVisualStyleBackColor = false;
+            NovaCompraButton.Click += NovaCompraButton_Click;
             // 
             // caixaPesquisa
             // 

@@ -16,7 +16,7 @@ namespace pitaya_crud.Models
         [BsonElement("nome_produto")]
         public string NomeProduto { get; set; }
 
-        [BsonElement("quantidade")]
-        public int Quantidade { get; set; }
+        [BsonElement("quantidadep")]
+        public int QuantidadeP { get; set; }
     }
 }

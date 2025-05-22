@@ -47,6 +47,17 @@ namespace pitaya_crud.Forms
 
         private async Task AtualizarDataGrid()
         {
+            var estadoAtual = new Dictionary<string, (bool selecionado, int quantidade)>();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                var prodId = row.Cells["CodigoProduto"]?.Value?.ToString();
+                if (!string.IsNullOrEmpty(prodId))
+                {
+                    bool selecionado = row.Cells["Selecionar"]?.Value as bool? ?? false;
+                    int.TryParse(row.Cells["QuantidadeP"]?.Value?.ToString(), out int quantidade);
+                    estadoAtual[prodId] = (selecionado, quantidade);
+                }
+            }
             _produto = await _serviceProduto.GetProdutosAsync(
                 orderBy: string.IsNullOrWhiteSpace(_ordenadoPor) ? null : _ordenadoPor,
                 nome: _nomeproduto
@@ -62,28 +73,38 @@ namespace pitaya_crud.Forms
             dataGridView1.DataSource = null;
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = _produto;
+            AdicionarColunas();
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
-                if (!(col is DataGridViewButtonColumn))
+                if (!(col is DataGridViewButtonColumn) && col.Name != "QuantidadeP" && col.Name != "Selecionar")
                     col.ReadOnly = true;
             }
-            AdicionarColunas();
-            if (_compraoriginal != null && _compraoriginal.Produtos != null)
+            foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                foreach (DataGridViewRow row in dataGridView1.Rows)
+                string prodId = row.Cells["CodigoProduto"].Value?.ToString();
+                if (estadoAtual.TryGetValue(prodId, out var estado))
                 {
-                    string prodId = row.Cells["Id"].Value?.ToString();
+                    row.Cells["Selecionar"].Value = estado.selecionado;
+                    row.Cells["QuantidadeP"].Value = estado.quantidade > 0 ? estado.quantidade.ToString() : "";
+                }
+                else if (_compraoriginal != null && _compraoriginal.Produtos != null)
+                {
                     var itemCompra = _compraoriginal.Produtos.FirstOrDefault(i => i.ProdutoId == prodId);
                     if (itemCompra != null)
                     {
                         row.Cells["Selecionar"].Value = true;
-                        row.Cells["Quantidade"].Value = itemCompra.Quantidade;
+                        row.Cells["QuantidadeP"].Value = itemCompra.QuantidadeP;
                     }
                     else
                     {
                         row.Cells["Selecionar"].Value = false;
-                        row.Cells["Quantidade"].Value = "";
+                        row.Cells["QuantidadeP"].Value = "";
                     }
+                }
+                else
+                {
+                    row.Cells["Selecionar"].Value = false;
+                    row.Cells["QuantidadeP"].Value = "";
                 }
             }
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -92,14 +113,32 @@ namespace pitaya_crud.Forms
 
         private void AdicionarColunas()
         {
-            DataGridViewCheckBoxColumn colunaSelecionar = new DataGridViewCheckBoxColumn();
-            colunaSelecionar.Name = "Selecionar";
-            colunaSelecionar.HeaderText = "Selecionar";
-            dataGridView1.Columns.Add(colunaSelecionar);
-            DataGridViewTextBoxColumn colunaQuantidade = new DataGridViewTextBoxColumn();
-            colunaQuantidade.Name = "Quantidade";
-            colunaQuantidade.HeaderText = "Quantidade";
-            dataGridView1.Columns.Add(colunaQuantidade);
+            if (dataGridView1.Columns.Contains("Selecionar"))
+            {
+                dataGridView1.Columns.Remove("Selecionar");
+            }
+            if (dataGridView1.Columns.Contains("QuantidadeP"))
+            {
+                dataGridView1.Columns.Remove("QuantidadeP");
+            }
+            if (!dataGridView1.Columns.Contains("Selecionar"))
+            {
+                var colunaSelecionar = new DataGridViewCheckBoxColumn 
+                {
+                    Name = "Selecionar",
+                    HeaderText = "Selecionar"
+                };
+                dataGridView1.Columns.Insert(0, colunaSelecionar);
+            }
+            if (!dataGridView1.Columns.Contains("QuantidadeP"))
+            {
+                var colunaQuantidadeP = new DataGridViewTextBoxColumn
+                {
+                    Name = "QuantidadeP",
+                    HeaderText = "QuantidadeP"
+                };
+                dataGridView1.Columns.Insert(1, colunaQuantidadeP);
+            }
         }
 
         private void CalculaValorTotal()
@@ -110,14 +149,14 @@ namespace pitaya_crud.Forms
                 if (row.Cells["Selecionar"].Value != null && Convert.ToBoolean(row.Cells["Selecionar"].Value))
                 {
                     decimal valorUnitario = 0.00m;
-                    if (row.Cells["Preco"].Value != null)
+                    if (row.Cells["Valor"].Value != null)
                     {
-                        decimal.TryParse(row.Cells["Preco"].Value.ToString(), out valorUnitario);
+                        decimal.TryParse(row.Cells["Valor"].Value.ToString(), out valorUnitario);
                     }
                     int quantidade = 0;
-                    if (row.Cells["Quantidade"].Value != null)
+                    if (row.Cells["QuantidadeP"].Value != null)
                     {
-                        int.TryParse(row.Cells["Quantidade"].Value.ToString(), out quantidade);
+                        int.TryParse(row.Cells["QuantidadeP"].Value.ToString(), out quantidade);
                     }
                     valorTotal += valorUnitario * quantidade;
                 }
@@ -134,7 +173,7 @@ namespace pitaya_crud.Forms
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "Selecionar" ||
-                dataGridView1.Columns[e.ColumnIndex].Name == "Quantidade")
+                dataGridView1.Columns[e.ColumnIndex].Name == "QuantidadeP")
             {
                 CalculaValorTotal();
             }
@@ -151,7 +190,7 @@ namespace pitaya_crud.Forms
         private async void Salvarbutton_Click(object sender, EventArgs e)
         {
             DateTime data;
-            if(DateTime.TryParseExact(caixaData.Text, "dd/MM/yyyy",
+            if(!DateTime.TryParseExact(caixaData.Text, "dd/MM/yyyy",
                                                   System.Globalization.CultureInfo.InvariantCulture,
                                                   System.Globalization.DateTimeStyles.None, out data))
             {
@@ -164,15 +203,15 @@ namespace pitaya_crud.Forms
                 bool selecionado = Convert.ToBoolean(row.Cells["Selecionar"].Value);
                 if (selecionado)
                 {
-                    string produtoId = row.Cells["Id"].Value.ToString();
-                    string nomeProduto = row.Cells["Nome"].Value.ToString();
-                    int quantidade = int.Parse(row.Cells["Quantidade"].Value.ToString());
+                    string produtoId = row.Cells["CodigoProduto"].Value.ToString();
+                    string nomeProduto = row.Cells["NomeProduto"].Value.ToString();
+                    int quantidadep = int.Parse(row.Cells["QuantidadeP"].Value.ToString());
 
                     produtosSelecionados.Add(new ProdutoCompra
                     {
                         ProdutoId = produtoId,
                         NomeProduto = nomeProduto,
-                        Quantidade = quantidade
+                        QuantidadeP = quantidadep
                     });
                 }
             }

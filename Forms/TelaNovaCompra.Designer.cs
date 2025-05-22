@@ -154,6 +154,7 @@
             Salvarbutton.TabIndex = 24;
             Salvarbutton.Text = "SALVAR";
             Salvarbutton.UseVisualStyleBackColor = false;
+            Salvarbutton.Click += Salvarbutton_Click;
             // 
             // Cancelarbutton
             // 
@@ -166,6 +167,7 @@
             Cancelarbutton.TabIndex = 25;
             Cancelarbutton.Text = "CANCELAR";
             Cancelarbutton.UseVisualStyleBackColor = false;
+            Cancelarbutton.Click += Cancelarbutton_Click;
             // 
             // TelaNovaCompra
             // 
