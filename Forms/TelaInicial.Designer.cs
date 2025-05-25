@@ -35,7 +35,9 @@
             usuariosButton = new Button();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             graficoPanel = new Panel();
-            button1 = new Button();
+            reiniciarButton = new Button();
+            TituloPitaya = new Label();
+            Lema = new Label();
             SuspendLayout();
             // 
             // clientesButton
@@ -90,16 +92,43 @@
             graficoPanel.Size = new Size(497, 322);
             graficoPanel.TabIndex = 4;
             // 
-            // button1
+            // reiniciarButton
             // 
-            button1.BackColor = Color.LightSkyBlue;
-            button1.Location = new Point(51, 12);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 0;
-            button1.Text = "Reiniciar ";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            reiniciarButton.BackColor = Color.LightSkyBlue;
+            reiniciarButton.Image = (Image)resources.GetObject("reiniciarButton.Image");
+            reiniciarButton.Location = new Point(512, 396);
+            reiniciarButton.Name = "reiniciarButton";
+            reiniciarButton.Size = new Size(36, 34);
+            reiniciarButton.TabIndex = 0;
+            reiniciarButton.UseVisualStyleBackColor = false;
+            reiniciarButton.Click += button1_Click;
+            // 
+            // TituloPitaya
+            // 
+            TituloPitaya.AccessibleRole = AccessibleRole.TitleBar;
+            TituloPitaya.AutoSize = true;
+            TituloPitaya.BackColor = Color.FromArgb(251, 254, 173);
+            TituloPitaya.Font = new Font("Microsoft Sans Serif", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            TituloPitaya.ForeColor = Color.Blue;
+            TituloPitaya.Location = new Point(275, 9);
+            TituloPitaya.Name = "TituloPitaya";
+            TituloPitaya.Size = new Size(216, 42);
+            TituloPitaya.TabIndex = 7;
+            TituloPitaya.Text = "Bem-vindo!";
+            TituloPitaya.Click += TituloPitaya_Click;
+            // 
+            // Lema
+            // 
+            Lema.AccessibleRole = AccessibleRole.TitleBar;
+            Lema.AutoSize = true;
+            Lema.BackColor = Color.FromArgb(251, 254, 173);
+            Lema.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Lema.ForeColor = Color.Black;
+            Lema.Location = new Point(51, 394);
+            Lema.Name = "Lema";
+            Lema.Size = new Size(124, 24);
+            Lema.TabIndex = 12;
+            Lema.Text = "Informações";
             // 
             // TelaInicial
             // 
@@ -107,7 +136,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(800, 450);
-            Controls.Add(button1);
+            Controls.Add(Lema);
+            Controls.Add(TituloPitaya);
+            Controls.Add(reiniciarButton);
             Controls.Add(graficoPanel);
             Controls.Add(usuariosButton);
             Controls.Add(produtosButton);
@@ -116,6 +147,7 @@
             Name = "TelaInicial";
             Text = "TelaInicial";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -126,6 +158,8 @@
         private Button usuariosButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Panel graficoPanel;
-        private Button button1;
+        private Button reiniciarButton;
+        private Label TituloPitaya;
+        private Label Lema;
     }
 }

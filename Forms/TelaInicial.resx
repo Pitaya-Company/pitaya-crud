@@ -157,6 +157,14 @@
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="reiniciarButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAB4SURBVEhL7ZNBCoAwEAPzCn2N3/Lq0y0BC6WXJtFepAO5FHYHdrfAAjgBXP3jV+wA7ifTJEci
+        qQVJJElf5MQSKLwa0YgtaU5UAYnO1BEsJKKRcnFcoIItYPNaxFMcYQna5vxECrKgbZ5kyHQBSUZk4y45
+        wjnTH1MAnqdmurN2PKsAAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="$this.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAzAAAAHpCAYAAABdptnVAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

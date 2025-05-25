@@ -135,5 +135,10 @@ namespace pitaya_crud.Forms
         {
             await CarregarDadosDeVendas();
         }
+
+        private void TituloPitaya_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
