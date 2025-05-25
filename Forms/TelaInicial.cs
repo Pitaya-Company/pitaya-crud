@@ -14,11 +14,13 @@ namespace pitaya_crud.Forms
     {
         private CartesianChart graficoVendas;
         private readonly CompraService _compraService;
+        private readonly ClienteService _clienteService;
 
         public TelaInicial()
         {
             InitializeComponent();
             _compraService = new CompraService();
+            _clienteService = new ClienteService();
             InicializarGrafico();
             _ = CarregarDadosDeVendas();
         }
@@ -38,13 +40,18 @@ namespace pitaya_crud.Forms
         private async Task CarregarDadosDeVendas()
         {
             List<Compra> compras = await _compraService.GetComprasAsync();
+            List<Cliente> clientes = await _clienteService.GetClientesAsync();
 
-            var dadosAgrupados = compras
+            var comprasAgrupadas = compras
                 .GroupBy(c => new DateTime(c.Data.Year, c.Data.Month, 1))
                 .OrderBy(g => g.Key)
                 .ToList();
 
-            if (dadosAgrupados.Count == 0)
+            var clientesAgrupados = clientes
+                .GroupBy(c => new DateTime(c.DataCriacao.Year, c.DataCriacao.Month, 1))
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            if (comprasAgrupadas.Count == 0)
             {
                 graficoVendas.Series = Array.Empty<ISeries>();
                 graficoVendas.XAxes = Array.Empty<Axis>();
@@ -52,42 +59,53 @@ namespace pitaya_crud.Forms
                 return;
             }
 
-            var labels = dadosAgrupados.Select(g => g.Key.ToString("MMM yyyy")).ToArray();
-            var values = dadosAgrupados.Select(g => (double)g.Sum(c => c.Total)).ToArray();
+            var labels = comprasAgrupadas.Select(g => g.Key.ToString("MMM yyyy")).ToArray();
+            var valoresVendas = comprasAgrupadas.Select(g => (double)g.Sum(c => c.Total)).ToArray();
+            var valoresClientes = comprasAgrupadas
+                .Select(g => clientesAgrupados.TryGetValue(g.Key, out int count) ? (double)count : 0)
+                .ToArray();
 
-            var series = new LineSeries<double>
+            var seriesVendas = new LineSeries<double>
             {
-                Name = "Vendas",
-                Values = values,
-                Fill = new SolidColorPaint(new SKColor(70, 130, 180, 100)),
-                Stroke = new SolidColorPaint(new SKColor(70, 130, 180)) { StrokeThickness = 3 },
+                Name = "Vendas (R$)",
+                Values = valoresVendas,
+                Fill = new SolidColorPaint(new SKColor(205, 92, 92, 100)),
+                Stroke = new SolidColorPaint(new SKColor(205, 92, 92)) { StrokeThickness = 3 },
                 GeometrySize = 0,
                 LineSmoothness = 0.3,
             };
 
+            var seriesClientes = new ColumnSeries<double>
+            {
+                Name = "Novos Clientes",
+                Values = valoresClientes,
+                Fill = new SolidColorPaint(new SKColor(135, 206, 250)),
+                Stroke = null
+            };
 
-            graficoVendas.Series = [series];
+            graficoVendas.Series = new ISeries[] { seriesClientes, seriesVendas };
 
-            graficoVendas.XAxes =
-            [
-                new Axis
-                {
-                    Labels = labels,
-                    LabelsRotation = 45,
-                    Name = "Mês",
-                    NamePadding = new LiveChartsCore.Drawing.Padding(0, 15, 0, 0),
-                }
-            ];
-
-            graficoVendas.YAxes =
-            [
-                new Axis
-                {
-                    Name = "Total de Vendas (R$)",
-                    Labeler = value => value.ToString("C2")
-                }
-            ];
+            graficoVendas.XAxes = new[]
+            {
+        new Axis
+        {
+            Labels = labels,
+            LabelsRotation = 45,
+            Name = "Mês",
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 15, 0, 0),
         }
+    };
+
+            graficoVendas.YAxes = new[]
+            {
+        new Axis
+        {
+            Name = "Valores / Quantidades",
+            Labeler = value => value.ToString("N0")
+        }
+    };
+        }
+
 
         private void comprasButton_Click(object sender, EventArgs e)
         {
@@ -109,8 +127,8 @@ namespace pitaya_crud.Forms
 
         private void usuariosButton_Click(object sender, EventArgs e)
         {
-            // new TelaUsuario.ShowDialog();
-            // Show();
+            new TelaUsuario().ShowDialog();
+            Show();
         }
 
         private async void button1_Click(object sender, EventArgs e)

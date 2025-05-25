@@ -22,6 +22,11 @@ namespace pitaya_crud.Services
             return user != null;
         }
 
+        public async Task<Usuario?> GetUsuarioByEmail(string email)
+        {
+            return await _usuarios.Find(u => u.Email == email).FirstOrDefaultAsync();
+        }
+
         public async Task<Usuario?> CreateUsuarioAsync(Usuario usuario)
         {
             var jaExiste = await _usuarios.Find(u => u.Email == usuario.Email).AnyAsync();
@@ -37,6 +42,14 @@ namespace pitaya_crud.Services
 
             await _usuarios.InsertOneAsync(usuario);
             return usuario;
+        }
+
+        public async Task UpdateUsuarioAsync(Usuario usuario)
+        {
+            var result = await _usuarios.ReplaceOneAsync(u => u.Email == usuario.Email, usuario);
+            if (result.ModifiedCount < 1) 
+                throw new ArgumentException("Ocorreu um erro ao atualizar");
+
         }
 
         public async Task DeleteUsuarioAsync(string id)

@@ -24,6 +24,9 @@ namespace pitaya_crud.Models
         [BsonElement("sexo")]
         public required  string Sexo { get; set; }
 
+        [BsonElement("data_criacao")] 
+        public DateTime DataCriacao = DateTime.UtcNow;
+
         public bool IsValid()
         {
             if (string.IsNullOrWhiteSpace(Nome)) return false;

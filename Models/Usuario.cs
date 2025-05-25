@@ -7,7 +7,7 @@ namespace pitaya_crud.Models
     {
         [BsonId] // define ID único do documento no MongoDB
         [BsonRepresentation(BsonType.ObjectId)] // converte automaticamente string para ObjectId
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("email")]
         public required string Email { get; set; }
