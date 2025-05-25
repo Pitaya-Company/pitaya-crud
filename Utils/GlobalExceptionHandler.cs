@@ -8,14 +8,29 @@
 
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
-                if (e.ExceptionObject is Exception ex) TrataErro(ex);
+                if (e.ExceptionObject is Exception ex)
+                    TrataErro(ex);
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                TrataErro(e.Exception);
+                e.SetObserved();
             };
         }
 
         private static void TrataErro(Exception ex)
         {
-            MessageBox.Show($"Ocorreu um erro inesperado \n\n {ex.Message}", 
-                "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            try
+            {
+                MessageBox.Show($"Ocorreu um erro inesperado:\n\n{ex.Message}",
+                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch
+            {
+                Console.Error.WriteLine("Erro fatal: " + ex);
+            }
         }
     }
+
 }

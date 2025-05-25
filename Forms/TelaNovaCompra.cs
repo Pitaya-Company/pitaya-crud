@@ -16,8 +16,10 @@ namespace pitaya_crud.Forms
     {
         private Compra? _compraoriginal;
         private List<Produto> _produto = new();
+        private List<Cliente> _clientes = new();
         private readonly CompraService _serviceCompra;
         private readonly ProdutoService _serviceProduto;
+        private readonly ClienteService _serviceCliente;
         private string _ordenadoPor = "";
         private bool _crescente = true;
         private string _nomeproduto = "";
@@ -28,11 +30,8 @@ namespace pitaya_crud.Forms
             _compraoriginal = compra;
             _serviceCompra = new CompraService();
             _serviceProduto = new ProdutoService();
-            if (_compraoriginal != null)
-            {
-                caixaidCliente.Text = _compraoriginal.ClienteId;
-                caixaData.Text = _compraoriginal.Data.ToString("dd/MM/yyyy");
-            }
+            _serviceCliente = new ClienteService();
+
             this.Load += TelaNovaCompra_Load;
             dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
@@ -42,7 +41,27 @@ namespace pitaya_crud.Forms
 
         private async void TelaNovaCompra_Load(object? sender, EventArgs e)
         {
+            await CarregarClientesAsync();
+            if (_compraoriginal != null)
+            {
+                var clienteSelecionado = _clientes.FirstOrDefault(c => c.Id == _compraoriginal.ClienteId);
+                if (clienteSelecionado != null)
+                {
+                    clienteCombo.SelectedItem = clienteSelecionado;
+                }
+                caixaData.Text = _compraoriginal.Data.ToString("dd/MM/yyyy");
+            }
             await AtualizarDataGrid();
+        }
+
+        private async Task CarregarClientesAsync()
+        {
+            _clientes = await _serviceCliente.GetClientesAsync();
+            clienteCombo.DataSource = _clientes;
+            clienteCombo.DisplayMember = "Nome";
+            clienteCombo.ValueMember = "Id";
+            clienteCombo.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            clienteCombo.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
         private async Task AtualizarDataGrid()
@@ -58,27 +77,32 @@ namespace pitaya_crud.Forms
                     estadoAtual[prodId] = (selecionado, quantidade);
                 }
             }
+
             _produto = await _serviceProduto.GetProdutosAsync(
                 orderBy: string.IsNullOrWhiteSpace(_ordenadoPor) ? null : _ordenadoPor,
                 nome: _nomeproduto
             );
             if (!_crescente)
                 _produto.Reverse();
+
             if (_produto.Count == 0)
             {
-                MessageBox.Show("Nenhuma produto encontrado.");
+                MessageBox.Show("Nenhum produto encontrado.");
                 return;
             }
+
             dataGridView1.SuspendLayout();
             dataGridView1.DataSource = null;
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = _produto;
             AdicionarColunas();
+
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (!(col is DataGridViewButtonColumn) && col.Name != "QuantidadeP" && col.Name != "Selecionar")
                     col.ReadOnly = true;
             }
+
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 string prodId = row.Cells["CodigoProduto"].Value?.ToString();
@@ -107,6 +131,7 @@ namespace pitaya_crud.Forms
                     row.Cells["QuantidadeP"].Value = "";
                 }
             }
+
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ResumeLayout();
         }
@@ -123,7 +148,7 @@ namespace pitaya_crud.Forms
             }
             if (!dataGridView1.Columns.Contains("Selecionar"))
             {
-                var colunaSelecionar = new DataGridViewCheckBoxColumn 
+                var colunaSelecionar = new DataGridViewCheckBoxColumn
                 {
                     Name = "Selecionar",
                     HeaderText = "Selecionar"
@@ -181,7 +206,7 @@ namespace pitaya_crud.Forms
 
         private void CaixaData_Click(object sender, EventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(caixaData.Text))
+            if (string.IsNullOrWhiteSpace(caixaData.Text))
             {
                 caixaData.Text = DateTime.Now.ToString("dd/MM/yyyy");
             }
@@ -189,14 +214,27 @@ namespace pitaya_crud.Forms
 
         private async void Salvarbutton_Click(object sender, EventArgs e)
         {
-            DateTime data;
-            if(!DateTime.TryParseExact(caixaData.Text, "dd/MM/yyyy",
-                                                  System.Globalization.CultureInfo.InvariantCulture,
-                                                  System.Globalization.DateTimeStyles.None, out data))
+            if (clienteCombo.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione um cliente.");
+                return;
+            }
+
+            var clienteSelecionado = clienteCombo.SelectedItem as Cliente;
+            if (clienteSelecionado == null)
+            {
+                MessageBox.Show("Cliente inválido.");
+                return;
+            }
+
+            if (!DateTime.TryParseExact(caixaData.Text, "dd/MM/yyyy",
+                                        System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None, out DateTime data))
             {
                 MessageBox.Show("Data inválida. Formato válido dd/MM/yyyy");
                 return;
             }
+
             var produtosSelecionados = new List<ProdutoCompra>();
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
@@ -215,37 +253,33 @@ namespace pitaya_crud.Forms
                     });
                 }
             }
+
+            var novaCompra = new Compra
+            {
+                ClienteId = clienteSelecionado.Id,
+                Produtos = produtosSelecionados,
+                Data = data,
+                Total = decimal.Parse(caixaValorTotal.Text)
+            };
+
             if (_compraoriginal != null)
             {
-                var compraeditada = new Compra()
-                {
-                    Id = _compraoriginal.Id,
-                    ClienteId = caixaidCliente.Text,
-                    Produtos = produtosSelecionados,
-                    Data = DateTime.Parse(caixaData.Text),
-                    Total = decimal.Parse(caixaValorTotal.Text)
-                };
-                Compra? compraalterada = await _serviceCompra.UpdateCompraAsync(compraeditada);
-                if (compraalterada != null)
+                novaCompra.Id = _compraoriginal.Id;
+                Compra? compraAlterada = await _serviceCompra.UpdateCompraAsync(novaCompra);
+                if (compraAlterada != null)
                 {
                     MessageBox.Show("Compra alterada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            else if (_compraoriginal == null)
+            else
             {
-                var novacompra = new Compra()
-                {
-                    ClienteId = caixaidCliente.Text,
-                    Produtos = produtosSelecionados,
-                    Data = DateTime.Parse(caixaData.Text),
-                    Total = decimal.Parse(caixaValorTotal.Text)
-                };
-                Compra? compra = await _serviceCompra.CreateCompraAsync(novacompra);
-                if (compra != null)
+                Compra? compraCriada = await _serviceCompra.CreateCompraAsync(novaCompra);
+                if (compraCriada != null)
                 {
                     MessageBox.Show("Compra realizada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+
             Cancelarbutton.Text = "SAIR";
         }
 
@@ -275,5 +309,6 @@ namespace pitaya_crud.Forms
 
             await AtualizarDataGrid();
         }
+
     }
 }

@@ -13,6 +13,8 @@ namespace pitaya_crud.Forms
         private bool _crescente = true;
         private string _filtroNome = "";
 
+        private Dictionary<int, Produto> _produtosOriginais = new();
+
         public TelaProduto()
         {
             InitializeComponent();
@@ -21,7 +23,6 @@ namespace pitaya_crud.Forms
             this.Load += TelaProduto_Load;
             dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
-            dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
         }
 
         private async void TelaProduto_Load(object? sender, EventArgs e)
@@ -48,7 +49,6 @@ namespace pitaya_crud.Forms
             dataGridView1.Columns["NomeProduto"].HeaderText = "Nome";
             dataGridView1.Columns["Valor"].DefaultCellStyle.Format = "C2";
 
-            // Permite edição apenas em algumas colunas
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 col.ReadOnly = !(col.Name == "NomeProduto" || col.Name == "Valor" || col.Name == "Quantidade");
@@ -62,18 +62,35 @@ namespace pitaya_crud.Forms
 
         private void DefinirColunasAcao()
         {
+            if (!dataGridView1.Columns.Contains("Editar"))
+            {
+                var colunaEditar = new DataGridViewButtonColumn
+                {
+                    Name = "Editar",
+                    HeaderText = "Editar",
+                    UseColumnTextForButtonValue = false
+                };
+                dataGridView1.Columns.Add(colunaEditar);
+            }
+
             if (!dataGridView1.Columns.Contains("Excluir"))
             {
                 var colunaExcluir = new DataGridViewButtonColumn
                 {
                     Name = "Excluir",
-                    HeaderText = "Ações",
-                    Text = "Excluir",
-                    UseColumnTextForButtonValue = true
+                    HeaderText = "Excluir",
+                    UseColumnTextForButtonValue = false
                 };
                 dataGridView1.Columns.Add(colunaExcluir);
             }
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                row.Cells["Editar"].Value = "Editar";
+                row.Cells["Excluir"].Value = "Excluir";
+            }
         }
+
 
         private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -81,6 +98,17 @@ namespace pitaya_crud.Forms
                 return;
 
             string coluna = dataGridView1.Columns[e.ColumnIndex].Name;
+            var cellValue = dataGridView1.Rows[e.RowIndex].Cells[coluna].Value?.ToString();
+
+            if (coluna == "Excluir" && cellValue == "Cancelar")
+            {
+                if (_produtosOriginais.ContainsKey(e.RowIndex))
+                {
+                    _produtos[e.RowIndex] = _produtosOriginais[e.RowIndex];
+                    await AtualizarDataGrid();
+                }
+                return;
+            }
 
             if (coluna == "Excluir")
             {
@@ -95,33 +123,45 @@ namespace pitaya_crud.Forms
                     MessageBox.Show("Produto excluído com sucesso.");
                 }
             }
-        }
-
-        private async void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
-                return;
-
-            var linha = dataGridView1.Rows[e.RowIndex];
-            if (linha.DataBoundItem is Produto produtoEditado)
+            else if (coluna == "Editar")
             {
-                try
+                if (cellValue == "Editar")
                 {
-                    await _service.UpdateProdutoAsync(produtoEditado);
-                    MessageBox.Show("Produto atualizado com sucesso!");
+                    _produtosOriginais[e.RowIndex] = new Produto
+                    {
+                        CodigoProduto = _produtos[e.RowIndex].CodigoProduto,
+                        NomeProduto = _produtos[e.RowIndex].NomeProduto,
+                        Valor = _produtos[e.RowIndex].Valor,
+                        Quantidade = _produtos[e.RowIndex].Quantidade
+                    };
+
+                    dataGridView1.Rows[e.RowIndex].Cells["NomeProduto"].ReadOnly = false;
+                    dataGridView1.Rows[e.RowIndex].Cells["Valor"].ReadOnly = false;
+                    dataGridView1.Rows[e.RowIndex].Cells["Quantidade"].ReadOnly = false;
+
+                    dataGridView1.Rows[e.RowIndex].Cells["Editar"].Value = "Confirmar";
+                    dataGridView1.Rows[e.RowIndex].Cells["Excluir"].Value = "Cancelar";
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Erro ao atualizar produto: {ex.Message}");
+                    try
+                    {
+                        var produto = _produtos[e.RowIndex];
+                        await _service.UpdateProdutoAsync(produto);
+                        MessageBox.Show("Produto atualizado com sucesso!");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Erro ao atualizar produto: {ex.Message}");
+                    }
+                    finally
+                    {
+                        await AtualizarDataGrid();
+                    }
                 }
             }
         }
 
-        private async void BuscarButton_Click(object sender, EventArgs e)
-        {
-            _filtroNome = txtNomeBusca.Text;
-            await AtualizarDataGrid();
-        }
 
         private async void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -152,11 +192,16 @@ namespace pitaya_crud.Forms
 
         private void SairButton_Click(object sender, EventArgs e)
         {
-            //var confirmacao = MessageBox.Show("Tem certeza que deseja sair?",
-            //    "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            Close();
+        }
 
-            //if (confirmacao == DialogResult.Yes)
-                Close();
+        private async void txtNomeBusca_TextChanged(object sender, EventArgs e)
+        {
+            _filtroNome = txtNomeBusca.Text;
+            _produtos = _produtos.Where(p => p.NomeProduto
+                    .Contains(_filtroNome, StringComparison.CurrentCultureIgnoreCase))
+                .ToList();
+            await AtualizarDataGrid();
         }
     }
 }

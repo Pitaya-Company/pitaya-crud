@@ -45,12 +45,12 @@ namespace pitaya_crud.Forms
 
             if (_usuarioService.Login(email,senha))
             {
-                this.Hide();
+                Hide();
 
-                var telaListagem = new TelaListagem();
-                telaListagem.ShowDialog();
+                var telaInicial = new TelaInicial();
+                telaInicial.ShowDialog();
 
-                this.Show();
+                Show();
             }
             else
             {

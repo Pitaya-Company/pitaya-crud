@@ -30,7 +30,6 @@
         {
             panel2 = new Panel();
             txtNomeBusca = new TextBox();
-            BuscarButton = new Button();
             SairButton = new Button();
             NovoProdutoButton = new Button();
             panel1 = new Panel();
@@ -44,7 +43,6 @@
             // panel2
             // 
             panel2.Controls.Add(txtNomeBusca);
-            panel2.Controls.Add(BuscarButton);
             panel2.Controls.Add(SairButton);
             panel2.Controls.Add(NovoProdutoButton);
             panel2.Dock = DockStyle.Top;
@@ -57,19 +55,9 @@
             // 
             txtNomeBusca.Location = new Point(84, 10);
             txtNomeBusca.Name = "txtNomeBusca";
-            txtNomeBusca.Size = new Size(511, 23);
+            txtNomeBusca.Size = new Size(587, 23);
             txtNomeBusca.TabIndex = 9;
-            // 
-            // BuscarButton
-            // 
-            BuscarButton.Location = new Point(601, 11);
-            BuscarButton.Margin = new Padding(3, 2, 3, 2);
-            BuscarButton.Name = "BuscarButton";
-            BuscarButton.Size = new Size(70, 22);
-            BuscarButton.TabIndex = 8;
-            BuscarButton.Text = "Buscar";
-            BuscarButton.UseVisualStyleBackColor = true;
-            BuscarButton.Click += BuscarButton_Click;
+            txtNomeBusca.TextChanged += txtNomeBusca_TextChanged;
             // 
             // SairButton
             // 
@@ -153,7 +141,6 @@
         #endregion
 
         private Panel panel2;
-        private Button BuscarButton;
         private Button SairButton;
         private Button NovoProdutoButton;
         private Panel panel1;
