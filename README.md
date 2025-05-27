@@ -1,11 +1,11 @@
 # CRUD - Pitaya Company
 
+![Tela Inicial](./imgs/tela-inicial-print.png)
 
-Este projeto consiste na produção de um software desktop que permita CRUD (Create, Read, Update e Delete) utilizando o banco de dados MongoDB.<br>
-Composto por:<br>
-* <b>Tela de login</b> (login, senha e botões ‘’OK’’ e ‘’Limpar’’)<br>
-* <b>Tela de listagem de clientes</b> (Campo de pesquisa, grid para listagem de clientes com botões de editar e excluir cada registro e uma botão de Criar)<br>
-* <b>Tela de cadastro</b> (Nome, Idade, Telefone, Opção Fumante e Sexo) e ao final sendo exportado para o GitHub para análise do professor e criação de um portifólio de projetos para os alunos.<br>
+Sistema de gestão de mercado com:
+- Gestão de clientes, compras, produtos, usuários (administradores).
+- Listagem completa com filtros, ordenação, etc.
+- Análise simples e direta de valores.
 
 ## 🚀 Começando
 
@@ -15,7 +15,7 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 
 Crie uma variável de ambiente com o nome <b>PITAYACONNECTIONSTRING e com o valor:</b> <br>
 mongodb+srv://pitayacompany:pc0pc1pc2@clusterpitayacompany.b2gw2.mongodb.net/?appNameClusterPitayaCompany<br>
-Baixe o **[executável](https://github.com/Pitaya-Company/pitaya-crud/releases/download/pitaya/pitaya-crud.exe)**<br>
+Baixe o **[executável](https://github.com/Pitaya-Company/pitaya-crud/releases/tag/new/pitaya-crud.exe)**<br>
 Execute<br>
 
 obs: o login padrão é "admin" e a senha é "admin"
@@ -25,6 +25,7 @@ obs: o login padrão é "admin" e a senha é "admin"
 * .NET C# - Linguagem de programação
 * WinForms - GUI Framework
 * MongoDB - Banco de Dados Não Relacional
+* LiveChartsCore - Geração de gráfico 
 
 ## ✒️ Autores
 
