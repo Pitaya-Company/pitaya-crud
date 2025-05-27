@@ -15,8 +15,7 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 
 Crie uma variável de ambiente com o nome <b>PITAYACONNECTIONSTRING e com o valor:</b> <br>
 mongodb+srv://pitayacompany:pc0pc1pc2@clusterpitayacompany.b2gw2.mongodb.net/?appNameClusterPitayaCompany<br>
-Baixe o **[executável](https://github.com/Pitaya-Company/pitaya-crud/releases/tag/new/pitaya-crud.exe)**<br>
-Execute<br>
+Baixe e siga as instruções do **[Release](https://github.com/Pitaya-Company/pitaya-crud/releases/tag/new/pitaya-crud.exe)**<br>
 
 obs: o login padrão é "admin" e a senha é "admin"
 
